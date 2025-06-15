@@ -25,11 +25,20 @@ type Page = {
   imageUrl?: string | null;
 };
 
+const fonts = [
+  { label: "프리텐다드", value: "Pretendard-Regular, sans-serif" },
+  { label: "온글잎 콘콘체", value: "OwnglyphCorncorn, sans-serif" },
+  { label: "Rix열정도체", value: "RixYeoljeongdo_Regular, sans-serif" },
+  { label: "Rix열정도체", value: "ChosunGu, sans-serif" },
+];
+
 export default function Slide() {
   const { id } = useParams<{ id: string }>();
   const [pages, setPages] = useState<Page[]>([]);
   const [idx, setIdx] = useState(0);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [selectedFont, setSelectedFont] = useState<string>(fonts[0].value);
+  const [fontMenuOpen, setFontMenuOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -162,7 +171,8 @@ export default function Slide() {
     <div className="p-8 flex flex-col items-center">
       <div
         ref={slideRef}
-        className="w-full max-w-4xl min-h-[504px] border p-6 bg-white shadow-md mx-auto"
+        className="w-full max-w-4xl min-h-[504px] border p-6 bg-white shadow-md mx-auto flex"
+        style={{ fontFamily: selectedFont }}
       >
         {renderPage()}
       </div>
@@ -187,6 +197,31 @@ export default function Slide() {
         >
           Download
         </button>
+        <div className="relative inline-block text-left">
+          <button
+            onClick={() => setFontMenuOpen((o) => !o)}
+            className="px-4 py-2 border rounded bg-gray-100 hover:bg-gray-200"
+          >
+            Font
+          </button>
+          {fontMenuOpen && (
+            <ul className="absolute mt-2 w-40 bg-white border shadow-lg z-20">
+              {fonts.map((f) => (
+                <li
+                  key={f.value}
+                  onClick={() => {
+                    setSelectedFont(f.value);
+                    setFontMenuOpen(false);
+                  }}
+                  className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                  style={{ fontFamily: f.value }}
+                >
+                  {f.label}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
       <button
         onClick={() => navigate(-1)}

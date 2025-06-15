@@ -32,15 +32,17 @@ export default function Series() {
     <div className="p-8">
       <h1 className="text-2xl mb-4">{series.title}</h1>
       <ul className="space-y-2">
-        {series.slides.map((s) => (
-          <li
-            key={s.id}
-            onClick={() => navigate(`/slides/${s.id}`)}
-            className="border p-4 rounded font-semibold cursor-pointer"
-          >
-            {s.seriesOrder}. {s.slideTitle}
-          </li>
-        ))}
+        {series.slides
+          .map((s) => (
+            <li
+              key={s.id}
+              onClick={() => navigate(`/slides/${s.id}`)}
+              className="border p-4 rounded font-semibold cursor-pointer"
+            >
+              {s.seriesOrder}. {s.slideTitle}
+            </li>
+          ))
+          .reverse()}
       </ul>
     </div>
   );

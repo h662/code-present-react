@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -10,6 +10,10 @@ function CodeComp({
   isDownloading: boolean;
 }) {
   const [showCode, setShowCode] = useState(false);
+
+  useEffect(() => {
+    setShowCode(false);
+  }, [code]);
 
   return (
     <div className="mt-2">

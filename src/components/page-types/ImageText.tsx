@@ -12,7 +12,9 @@ function ImageText({
   return (
     <div className="flex flex-col items-center justify-center h-full">
       <ImageComp title={title} imageUrl={imageUrl} />
-      {description && <p className="text-2xl mb-4">{description}</p>}
+      {description && (
+        <p className="whitespace-pre-wrap text-2xl mb-4">{description}</p>
+      )}
     </div>
   );
 }

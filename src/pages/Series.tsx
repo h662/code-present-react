@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getSeries } from "../api/slideService";
 
 interface SlideMeta {
@@ -18,10 +18,10 @@ export default function Series() {
   const { id } = useParams<{ id: string }>();
   const [series, setSeries] = useState<SeriesDetail | null>(null);
 
-  useEffect(() => {
-    if (!id) return;
+  const navigate = useNavigate();
 
-    getSeries(+id)
+  useEffect(() => {
+    getSeries(id!)
       .then((res) => setSeries(res.data))
       .catch(console.error);
   }, [id]);
@@ -33,10 +33,12 @@ export default function Series() {
       <h1 className="text-2xl mb-4">{series.title}</h1>
       <ul className="space-y-2">
         {series.slides.map((s) => (
-          <li key={s.id} className="border p-4 rounded">
-            <Link to={`/slides/${s.id}`} className="font-semibold">
-              {s.seriesOrder}. {s.slideTitle}
-            </Link>
+          <li
+            key={s.id}
+            onClick={() => navigate(`/slides/${s.id}`)}
+            className="border p-4 rounded font-semibold cursor-pointer"
+          >
+            {s.seriesOrder}. {s.slideTitle}
           </li>
         ))}
       </ul>

@@ -1,70 +1,199 @@
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { getSlide } from "../api/slideService";
+import Title from "../components/page-types/Title";
+import TOC from "../components/page-types/TOC";
+import Conclusion from "../components/page-types/Conclusion";
+import TextOnly from "../components/page-types/TextOnly";
+import ImageText from "../components/page-types/ImageText";
+import ImageOnly from "../components/page-types/ImageOnly";
+import TableOnly from "../components/page-types/TableOnly";
+import TableImage from "../components/page-types/TableImage";
+import MCQ from "../components/page-types/MCQ";
+import Subjective from "../components/page-types/Subjective";
+import { toBlob } from "html-to-image";
 
 type Page = {
+  id: string | null;
   pageNumber: number;
   pageType: string;
-  text: string | null;
-  imageUrl: string | null;
+  title?: string | null;
+  description?: string | null;
+  code?: string | null;
+  options?: string[] | null;
+  answer?: string | null;
+  imageUrl?: string | null;
 };
 
 export default function Slide() {
   const { id } = useParams<{ id: string }>();
   const [pages, setPages] = useState<Page[]>([]);
   const [idx, setIdx] = useState(0);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const slideRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!id) return;
-
-    getSlide(+id!)
-      .then((res) => setPages(res.data.pages))
+    getSlide(id!)
+      .then((res) => {
+        const sorted = [...res.data.pages].sort(
+          (a, b) => a.pageNumber - b.pageNumber
+        );
+        setPages(sorted);
+      })
       .catch(console.error);
   }, [id]);
 
+  useEffect(() => console.log(pages), [pages]);
+
   if (!pages.length) return <p>Loading slide…</p>;
 
-  const { pageType, text, imageUrl } = pages[idx];
+  const page = pages[idx];
+  const { pageType, title, description, code, options, answer, imageUrl } =
+    page;
+
   const renderPage = () => {
     switch (pageType) {
       case "TITLE":
-        return <h2 className="text-4xl">{text || " "}</h2>;
+        return <Title title={title!} description={description!} />;
+      case "TOC":
+        return <TOC title={title!} description={description!} />;
       case "TEXT_ONLY":
-        return <p className="text-lg">{text}</p>;
+        return (
+          <TextOnly
+            title={title!}
+            description={description!}
+            code={code || null}
+            isDownloading={isDownloading}
+          />
+        );
+      case "CONCLUSION":
+        return <Conclusion title={title!} description={description!} />;
+      case "IMAGE_ONLY":
+        return <ImageOnly title={title!} imageUrl={imageUrl!} />;
       case "IMAGE_TEXT":
         return (
-          <div>
-            {imageUrl && (
-              <img src={imageUrl} alt="" className="max-w-full mb-4" />
-            )}
-            <p className="text-lg">{text}</p>
-          </div>
+          <ImageText
+            title={title!}
+            description={description!}
+            imageUrl={imageUrl!}
+          />
+        );
+      case "TABLE_ONLY":
+        return <TableOnly title={title!} description={description!} />;
+      case "TABLE_IMAGE":
+        return (
+          <TableImage
+            title={title!}
+            description={description!}
+            imageUrl={imageUrl!}
+          />
+        );
+      case "MCQ":
+        return (
+          <MCQ
+            key={page.id}
+            title={title!}
+            description={description!}
+            code={code || null}
+            isDownloading={isDownloading}
+            options={options!}
+            answer={answer!}
+          />
+        );
+      case "SUBJECTIVE":
+        return (
+          <Subjective
+            key={page.id}
+            title={title!}
+            description={description!}
+            code={code || null}
+            isDownloading={isDownloading}
+            answer={answer!}
+          />
         );
       default:
-        return null;
+        return <p>Unsupported page type.</p>;
     }
   };
 
+  async function handleDownload() {
+    if (!slideRef.current) return;
+
+    setIsDownloading(true);
+    await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
+
+    const node = slideRef.current;
+    const { width, height } = node.getBoundingClientRect();
+
+    const clone = node.cloneNode(true) as HTMLElement;
+    Object.assign(clone.style, {
+      position: "fixed",
+      top: "0",
+      left: "0",
+      margin: "0",
+      transform: "none",
+      zIndex: "-1000",
+    });
+    document.body.appendChild(clone);
+
+    const blob = await toBlob(clone, {
+      pixelRatio: 4,
+      width,
+      height,
+    });
+
+    document.body.removeChild(clone);
+    setIsDownloading(false);
+
+    if (!blob) return;
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `slide-${page.pageNumber}.png`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="p-8 flex flex-col items-center">
-      <div className="w-2/3 h-96 border p-6">{renderPage()}</div>
+      <div
+        ref={slideRef}
+        className="w-full max-w-4xl min-h-[504px] border p-6 bg-white shadow-md mx-auto"
+      >
+        {renderPage()}
+      </div>
       <div className="mt-4 space-x-4">
-        <button disabled={idx === 0} onClick={() => setIdx((i) => i - 1)}>
+        <button
+          disabled={idx === 0}
+          onClick={() => setIdx((i) => i - 1)}
+          className="px-4 py-2 border rounded"
+        >
           Prev
         </button>
         <button
           disabled={idx === pages.length - 1}
           onClick={() => setIdx((i) => i + 1)}
+          className="px-4 py-2 border rounded"
         >
           Next
         </button>
+        <button
+          onClick={handleDownload}
+          className="px-4 py-2 border rounded bg-blue-500 text-white"
+        >
+          Download
+        </button>
       </div>
-      <Link
-        to={`/series/${/* back to parent series if known or “/” */ ""}`}
-        className="mt-2 text-sm text-blue-600"
+      <button
+        onClick={() => navigate(-1)}
+        className="mt-4 text-sm text-blue-600"
       >
-        Back
-      </Link>
+        Back to Series
+      </button>
     </div>
   );
 }

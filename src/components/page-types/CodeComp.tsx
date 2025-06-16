@@ -19,7 +19,7 @@ function CodeComp({
     <div className="mt-2">
       {!isDownloading && (
         <button
-          className="text-blue-600 underline text-sm mb-2"
+          className="underline text-current text-sm mb-2"
           onClick={() => setShowCode((prev) => !prev)}
         >
           {showCode ? "코드 숨기기" : "코드 보기"}

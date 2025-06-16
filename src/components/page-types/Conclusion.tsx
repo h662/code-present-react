@@ -7,8 +7,8 @@ function Conclusion({
 }) {
   return (
     <div>
-      <h2 className="text-2xl font-semibold">{title}</h2>
-      <pre className="whitespace-pre-wrap mt-2">{description}</pre>
+      <h2 className="text-2xl font-semibold text-overlay">{title}</h2>
+      <pre className="whitespace-pre-wrap mt-2 text-overlay">{description}</pre>
     </div>
   );
 }

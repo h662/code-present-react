@@ -1,29 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getSlide } from "../api/slideService";
-import Title from "../components/page-types/Title";
-import TOC from "../components/page-types/TOC";
-import Conclusion from "../components/page-types/Conclusion";
-import TextOnly from "../components/page-types/TextOnly";
-import ImageText from "../components/page-types/ImageText";
-import ImageOnly from "../components/page-types/ImageOnly";
-import TableOnly from "../components/page-types/TableOnly";
-import TableImage from "../components/page-types/TableImage";
-import MCQ from "../components/page-types/MCQ";
-import Subjective from "../components/page-types/Subjective";
 import { toBlob } from "html-to-image";
-
-type Page = {
-  id: string | null;
-  pageNumber: number;
-  pageType: string;
-  title?: string | null;
-  description?: string | null;
-  code?: string | null;
-  options?: string[] | null;
-  answer?: string | null;
-  imageUrl?: string | null;
-};
+import SlideCanvas from "../components/SlideCanvas";
+import PageRenderer from "../components/PageRenderer";
+import SlideNav from "../components/SlideNav";
+import ThemeSelector from "../components/ThemeSelector";
+import { themes } from "../theme-data";
 
 const fonts = [
   { label: "프리텐다드", value: "Pretendard-Regular, sans-serif" },
@@ -40,8 +23,8 @@ export default function Slide() {
   const [pages, setPages] = useState<Page[]>([]);
   const [idx, setIdx] = useState(0);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [selectedFont, setSelectedFont] = useState<string>(fonts[0].value);
-  const [fontMenuOpen, setFontMenuOpen] = useState<boolean>(false);
+  const [selectedFont, setSelectedFont] = useState<Font>(fonts[0]);
+  const [selectedTheme, setSelectedTheme] = useState(themes[0]);
 
   const navigate = useNavigate();
 
@@ -63,73 +46,6 @@ export default function Slide() {
   if (!pages.length) return <p>Loading slide…</p>;
 
   const page = pages[idx];
-  const { pageType, title, description, code, options, answer, imageUrl } =
-    page;
-
-  const renderPage = () => {
-    switch (pageType) {
-      case "TITLE":
-        return <Title title={title!} description={description!} />;
-      case "TOC":
-        return <TOC title={title!} description={description!} />;
-      case "TEXT_ONLY":
-        return (
-          <TextOnly
-            title={title!}
-            description={description!}
-            code={code || null}
-            isDownloading={isDownloading}
-          />
-        );
-      case "CONCLUSION":
-        return <Conclusion title={title!} description={description!} />;
-      case "IMAGE_ONLY":
-        return <ImageOnly title={title!} imageUrl={imageUrl!} />;
-      case "IMAGE_TEXT":
-        return (
-          <ImageText
-            title={title!}
-            description={description!}
-            imageUrl={imageUrl!}
-          />
-        );
-      case "TABLE_ONLY":
-        return <TableOnly title={title!} description={description!} />;
-      case "TABLE_IMAGE":
-        return (
-          <TableImage
-            title={title!}
-            description={description!}
-            imageUrl={imageUrl!}
-          />
-        );
-      case "MCQ":
-        return (
-          <MCQ
-            key={page.id}
-            title={title!}
-            description={description!}
-            code={code || null}
-            isDownloading={isDownloading}
-            options={options!}
-            answer={answer!}
-          />
-        );
-      case "SUBJECTIVE":
-        return (
-          <Subjective
-            key={page.id}
-            title={title!}
-            description={description!}
-            code={code || null}
-            isDownloading={isDownloading}
-            answer={answer!}
-          />
-        );
-      default:
-        return <p>Unsupported page type.</p>;
-    }
-  };
 
   async function handleDownload() {
     if (!slideRef.current) return;
@@ -172,66 +88,41 @@ export default function Slide() {
 
   return (
     <div className="p-8 flex flex-col items-center">
-      <div
+      <SlideCanvas
         ref={slideRef}
-        className="w-full max-w-4xl min-h-[504px] border p-6 bg-white shadow-md mx-auto flex"
-        style={{ fontFamily: selectedFont }}
+        fontFamily={selectedFont.value}
+        textColor={selectedTheme.textColor}
+        backgroundColor={selectedTheme.backgroundColor}
+        backgroundImage={selectedTheme.backgroundImage}
+        backgroundSize={selectedTheme.backgroundSize}
+        backgroundRepeat={selectedTheme.backgroundRepeat}
+        backgroundPosition={selectedTheme.backgroundPosition}
       >
-        {renderPage()}
+        <PageRenderer
+          page={pages[idx]}
+          isDownloading={isDownloading}
+          theme={selectedTheme}
+        />
+      </SlideCanvas>
+
+      <SlideNav
+        onPrev={() => setIdx((i) => i - 1)}
+        onNext={() => setIdx((i) => i + 1)}
+        onDownload={handleDownload}
+        onBack={() => navigate(-1)}
+        disablePrev={idx === 0}
+        disableNext={idx === pages.length - 1}
+        fonts={fonts}
+        selectedFont={selectedFont}
+        onFontSelect={setSelectedFont}
+      />
+      <div className="mt-4 space-x-4 flex flex-wrap items-center">
+        <ThemeSelector
+          options={themes}
+          selectedText={selectedTheme.label}
+          onSelect={setSelectedTheme}
+        />
       </div>
-      <div className="mt-4 space-x-4">
-        <button
-          disabled={idx === 0}
-          onClick={() => setIdx((i) => i - 1)}
-          className="px-4 py-2 border rounded"
-        >
-          Prev
-        </button>
-        <button
-          disabled={idx === pages.length - 1}
-          onClick={() => setIdx((i) => i + 1)}
-          className="px-4 py-2 border rounded"
-        >
-          Next
-        </button>
-        <button
-          onClick={handleDownload}
-          className="px-4 py-2 border rounded bg-blue-500 text-white"
-        >
-          Download
-        </button>
-        <div className="relative inline-block text-left">
-          <button
-            onClick={() => setFontMenuOpen((o) => !o)}
-            className="px-4 py-2 border rounded bg-gray-100 hover:bg-gray-200"
-          >
-            Font
-          </button>
-          {fontMenuOpen && (
-            <ul className="absolute mt-2 w-40 bg-white border shadow-lg z-20">
-              {fonts.map((f) => (
-                <li
-                  key={f.value}
-                  onClick={() => {
-                    setSelectedFont(f.value);
-                    setFontMenuOpen(false);
-                  }}
-                  className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                  style={{ fontFamily: f.value }}
-                >
-                  {f.label}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-      <button
-        onClick={() => navigate(-1)}
-        className="mt-4 text-sm text-blue-600"
-      >
-        Back to Series
-      </button>
     </div>
   );
 }

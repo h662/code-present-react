@@ -7,6 +7,7 @@ interface SubjectiveProps {
   code: string | null;
   isDownloading: boolean;
   answer: string;
+  theme: ThemeOption;
 }
 
 export default function Subjective({
@@ -15,6 +16,7 @@ export default function Subjective({
   code,
   isDownloading,
   answer,
+  theme,
 }: SubjectiveProps) {
   const [input, setInput] = useState("");
   const [result, setResult] = useState<null | boolean>(null);
@@ -32,7 +34,7 @@ export default function Subjective({
 
   return (
     <div>
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      <h3 className="text-xl font-semibold mb-2 text-overlay">{title}</h3>
       <p>{description}</p>
 
       <div className="mt-4 flex space-x-2">
@@ -41,11 +43,15 @@ export default function Subjective({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="정답을 입력하세요"
-          className="flex-grow border p-2 rounded"
+          className="flex-grow border p-2 rounded bg-white/75 focus:outline-none placeholder-[var(--placeholder-color)]"
         />
         <button
           onClick={onSubmit}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
+          className="px-4 py-2 rounded"
+          style={{
+            backgroundColor: theme.textColor,
+            color: theme.backgroundColor,
+          }}
         >
           확인
         </button>

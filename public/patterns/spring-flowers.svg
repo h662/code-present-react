@@ -1,0 +1,30 @@
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="flowers" patternUnits="userSpaceOnUse" width="100" height="100">
+      <!-- 꽃잎 -->
+      <g fill="#ffb6c1" stroke="#d46a8c" stroke-width="0.5">
+        <circle cx="50" cy="40" r="8" />
+        <circle cx="58" cy="50" r="8" />
+        <circle cx="50" cy="60" r="8" />
+        <circle cx="42" cy="50" r="8" />
+      </g>
+      <!-- 꽃 중심 -->
+      <circle cx="50" cy="50" r="4" fill="#ff69b4" />
+      
+      <!-- 작은 꽃 -->
+      <g transform="translate(20, 20)">
+        <circle cx="0" cy="-3" r="3" fill="#ffd6dc" />
+        <circle cx="3" cy="0" r="3" fill="#ffd6dc" />
+        <circle cx="0" cy="3" r="3" fill="#ffd6dc" />
+        <circle cx="-3" cy="0" r="3" fill="#ffd6dc" />
+        <circle cx="0" cy="0" r="2" fill="#ff8fab" />
+      </g>
+
+      <!-- 더 작은 장식 -->
+      <circle cx="80" cy="80" r="1.5" fill="#ffc0cb" />
+      <circle cx="15" cy="75" r="1.5" fill="#ffc0cb" />
+      <circle cx="85" cy="25" r="1.2" fill="#ffc0cb" />
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#flowers)" />
+</svg>

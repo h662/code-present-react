@@ -57,6 +57,12 @@
   font-style: normal;
 }
 
+@layer components {
+  .text-overlay {
+    @apply bg-white/75 px-3 py-1 rounded;
+  }
+}
+
 pre {
   font-family: inherit;
 }

@@ -66,7 +66,7 @@ export default function MCQ({
 
   return (
     <div>
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      <h3 className="text-xl font-semibold mb-2 text-overlay">{title}</h3>
       <p>{description}</p>
 
       <ul className="mt-4 space-y-2">
@@ -77,7 +77,7 @@ export default function MCQ({
               key={i}
               onClick={() => onSelect(i)}
               className={`
-                cursor-pointer flex items-center space-x-2 rounded p-2
+                cursor-pointer flex items-center space-x-2 rounded p-2 text-overlay
                 ${
                   isSelected
                     ? "bg-blue-100 border border-blue-500"

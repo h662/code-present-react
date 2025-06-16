@@ -9,7 +9,7 @@ function TableOnly({
 }) {
   return (
     <div>
-      <h3 className="text-xl font-medium mb-2">{title}</h3>
+      <h3 className="text-2xl font-medium mb-2 text-overlay">{title}</h3>
       <TableComp description={description} />
     </div>
   );

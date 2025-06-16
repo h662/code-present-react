@@ -7,6 +7,8 @@ import PageRenderer from "../components/PageRenderer";
 import SlideNav from "../components/SlideNav";
 import ThemeSelector from "../components/ThemeSelector";
 import { themes } from "../theme-data";
+import FontSelector from "../components/FontSelector";
+import { FaAnglesLeft, FaDownload } from "react-icons/fa6";
 
 const fonts = [
   { label: "프리텐다드", value: "Pretendard-Regular, sans-serif" },
@@ -87,7 +89,29 @@ export default function Slide() {
   }
 
   return (
-    <div className="p-8 flex flex-col items-center">
+    <div className="p-8 flex flex-col items-center space-y-4">
+      <div className="w-full max-w-4xl flex justify-end space-x-2">
+        <button
+          onClick={() => navigate(-1)}
+          className="px-4 py-2 border rounded"
+        >
+          <FaAnglesLeft />
+        </button>
+        <button onClick={handleDownload} className="px-4 py-2 border rounded">
+          <FaDownload />
+        </button>
+        <FontSelector
+          options={fonts}
+          selectedFont={selectedFont}
+          onSelect={setSelectedFont}
+        />
+        <ThemeSelector
+          options={themes}
+          selectedText={selectedTheme.label}
+          onSelect={setSelectedTheme}
+        />
+      </div>
+
       <SlideCanvas
         ref={slideRef}
         fontFamily={selectedFont.value}
@@ -108,21 +132,9 @@ export default function Slide() {
       <SlideNav
         onPrev={() => setIdx((i) => i - 1)}
         onNext={() => setIdx((i) => i + 1)}
-        onDownload={handleDownload}
-        onBack={() => navigate(-1)}
         disablePrev={idx === 0}
         disableNext={idx === pages.length - 1}
-        fonts={fonts}
-        selectedFont={selectedFont}
-        onFontSelect={setSelectedFont}
       />
-      <div className="mt-4 space-x-4 flex flex-wrap items-center">
-        <ThemeSelector
-          options={themes}
-          selectedText={selectedTheme.label}
-          onSelect={setSelectedTheme}
-        />
-      </div>
     </div>
   );
 }

@@ -29,7 +29,10 @@ const fonts = [
   { label: "프리텐다드", value: "Pretendard-Regular, sans-serif" },
   { label: "온글잎 콘콘체", value: "OwnglyphCorncorn, sans-serif" },
   { label: "Rix열정도체", value: "RixYeoljeongdo_Regular, sans-serif" },
-  { label: "Rix열정도체", value: "ChosunGu, sans-serif" },
+  { label: "조선굴림체", value: "ChosunGu, sans-serif" },
+  { label: "온글잎 박다현체", value: "Ownglyph_ParkDaHyun, sans-serif" },
+  { label: "어그로체", value: "SBAggroB, sans-serif" },
+  { label: "쿠키런", value: "CookieRun-Regular, sans-serif" },
 ];
 
 export default function Slide() {

@@ -3,22 +3,22 @@ import TableComp from "./TableComp";
 function TableOnly({
   title,
   description,
-  useOverlay,
+  theme,
 }: {
   title: string;
   description: string;
-  useOverlay: boolean;
+  theme: ThemeOption;
 }) {
   return (
     <div>
       <h3
         className={`text-2xl font-medium mb-2 ${
-          useOverlay ? "text-overlay" : ""
+          theme.useOverlay ? "text-overlay" : ""
         }`}
       >
         {title}
       </h3>
-      <TableComp description={description} />
+      <TableComp description={description} theme={theme} />
     </div>
   );
 }

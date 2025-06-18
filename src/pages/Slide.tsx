@@ -10,16 +10,7 @@ import { themes } from "../theme-data";
 import FontSelector from "../components/FontSelector";
 import { FaAnglesLeft, FaDownload, FaMoon, FaSun } from "react-icons/fa6";
 import { ThemeContext } from "../contexts/ThemeContext";
-
-const fonts = [
-  { label: "프리텐다드", value: "Pretendard-Regular, sans-serif" },
-  { label: "온글잎 콘콘체", value: "OwnglyphCorncorn, sans-serif" },
-  { label: "Rix열정도체", value: "RixYeoljeongdo_Regular, sans-serif" },
-  { label: "조선굴림체", value: "ChosunGu, sans-serif" },
-  { label: "온글잎 박다현체", value: "Ownglyph_ParkDaHyun, sans-serif" },
-  { label: "어그로체", value: "SBAggroB, sans-serif" },
-  { label: "쿠키런", value: "CookieRun-Regular, sans-serif" },
-];
+import { fonts } from "../font-data";
 
 export default function Slide() {
   const { id } = useParams<{ id: string }>();
@@ -28,6 +19,8 @@ export default function Slide() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [selectedFont, setSelectedFont] = useState<Font>(fonts[0]);
   const [selectedTheme, setSelectedTheme] = useState(themes[0]);
+  const [fontOpen, setFontOpen] = useState(false);
+  const [themeOpen, setThemeOpen] = useState(false);
 
   const { theme, toggleTheme } = useContext(ThemeContext);
 
@@ -90,60 +83,78 @@ export default function Slide() {
   }
 
   return (
-    <div className="p-8 flex flex-col items-center space-y-4 bg-white dark:bg-gray-700">
-      <div className="w-full max-w-4xl flex justify-end space-x-2">
-        <button
-          onClick={toggleTheme}
-          className="btn-style"
-          title={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-700 transition-colors">
+      <div className="p-8 flex flex-col items-center space-y-4 w-full">
+        <div className="w-full max-w-4xl flex justify-end space-x-2">
+          <button
+            onClick={toggleTheme}
+            className="btn-style"
+            title={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
+          >
+            {theme === "dark" ? (
+              <FaSun className="text-yellow-400" />
+            ) : (
+              <FaMoon />
+            )}
+          </button>
+          <button onClick={() => navigate(-1)} className="btn-style">
+            <FaAnglesLeft />
+          </button>
+          <button onClick={handleDownload} className="btn-style">
+            <FaDownload />
+          </button>
+          <FontSelector
+            options={fonts}
+            selectedFont={selectedFont}
+            onSelect={(font) => {
+              setSelectedFont(font);
+              setFontOpen(false);
+            }}
+            open={fontOpen}
+            onToggle={() => {
+              setFontOpen((o) => !o);
+              setThemeOpen(false);
+            }}
+          />
+          <ThemeSelector
+            options={themes}
+            selectedText={selectedTheme.label}
+            onSelect={(theme) => {
+              setSelectedTheme(theme);
+              setThemeOpen(false);
+            }}
+            open={themeOpen}
+            onToggle={() => {
+              setThemeOpen((o) => !o);
+              setFontOpen(false);
+            }}
+          />
+        </div>
+
+        <SlideCanvas
+          ref={slideRef}
+          fontFamily={selectedFont.value}
+          textColor={selectedTheme.textColor}
+          backgroundColor={selectedTheme.backgroundColor}
+          backgroundImage={selectedTheme.backgroundImage}
+          backgroundSize={selectedTheme.backgroundSize}
+          backgroundRepeat={selectedTheme.backgroundRepeat}
+          backgroundPosition={selectedTheme.backgroundPosition}
         >
-          {theme === "dark" ? (
-            <FaSun className="text-yellow-400" />
-          ) : (
-            <FaMoon />
-          )}
-        </button>
-        <button onClick={() => navigate(-1)} className="btn-style">
-          <FaAnglesLeft />
-        </button>
-        <button onClick={handleDownload} className="btn-style">
-          <FaDownload />
-        </button>
-        <FontSelector
-          options={fonts}
-          selectedFont={selectedFont}
-          onSelect={setSelectedFont}
-        />
-        <ThemeSelector
-          options={themes}
-          selectedText={selectedTheme.label}
-          onSelect={setSelectedTheme}
+          <PageRenderer
+            page={pages[idx]}
+            isDownloading={isDownloading}
+            theme={selectedTheme}
+          />
+        </SlideCanvas>
+
+        <SlideNav
+          onPrev={() => setIdx((i) => i - 1)}
+          onNext={() => setIdx((i) => i + 1)}
+          disablePrev={idx === 0}
+          disableNext={idx === pages.length - 1}
         />
       </div>
-
-      <SlideCanvas
-        ref={slideRef}
-        fontFamily={selectedFont.value}
-        textColor={selectedTheme.textColor}
-        backgroundColor={selectedTheme.backgroundColor}
-        backgroundImage={selectedTheme.backgroundImage}
-        backgroundSize={selectedTheme.backgroundSize}
-        backgroundRepeat={selectedTheme.backgroundRepeat}
-        backgroundPosition={selectedTheme.backgroundPosition}
-      >
-        <PageRenderer
-          page={pages[idx]}
-          isDownloading={isDownloading}
-          theme={selectedTheme}
-        />
-      </SlideCanvas>
-
-      <SlideNav
-        onPrev={() => setIdx((i) => i - 1)}
-        onNext={() => setIdx((i) => i + 1)}
-        disablePrev={idx === 0}
-        disableNext={idx === pages.length - 1}
-      />
     </div>
   );
 }

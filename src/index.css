@@ -59,6 +59,38 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "Galmuri14";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2506-1@1.0/Galmuri14.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TheTuesdayofYounah";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2506-1@1.0/TheTuesdayofYounah.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SacheonUju-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2506-1@1.0/SacheonUju-Regular.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SacheonHangGong-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2506-1@1.0/SacheonHangGong-Regular.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @layer components {
   .text-overlay {
     @apply bg-white/75 px-3 py-1 rounded;

@@ -5,15 +5,17 @@ function TableImage({
   title,
   description,
   imageUrl,
+  theme,
 }: {
   title: string;
   description: string;
   imageUrl: string;
+  theme: ThemeOption;
 }) {
   return (
     <div>
       <h3 className="text-xl font-medium mb-2">{title}</h3>
-      <TableComp description={description} />
+      <TableComp description={description} theme={theme} />
       <ImageComp title={title} imageUrl={imageUrl} />
     </div>
   );

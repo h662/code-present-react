@@ -1,22 +1,22 @@
-import { useState } from "react";
-
 interface ThemeSelectorProps {
   options: ThemeOption[];
   selectedText: string;
   onSelect: (theme: ThemeOption) => void;
+  open: boolean;
+  onToggle: () => void;
 }
 
 export default function ThemeSelector({
   options,
   selectedText,
   onSelect,
+  open,
+  onToggle,
 }: ThemeSelectorProps) {
-  const [open, setOpen] = useState(false);
-
   return (
     <div className="relative inline-block text-left">
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={onToggle}
         className="
           px-4 py-2 border rounded
           bg-gray-100 text-gray-900 hover:bg-gray-200
@@ -39,10 +39,7 @@ export default function ThemeSelector({
           {options.map((opt) => (
             <li
               key={opt.label}
-              onClick={() => {
-                onSelect(opt);
-                setOpen(false);
-              }}
+              onClick={() => onSelect(opt)}
               className="
                 flex items-center px-3 py-2
                 hover:bg-gray-100 dark:hover:bg-gray-600

@@ -1,22 +1,22 @@
-import { useState } from "react";
-
 interface FontSelectorProps {
   options: FontOption[];
   selectedFont: Font;
   onSelect: (value: Font) => void;
+  open: boolean;
+  onToggle: () => void;
 }
 
 export default function FontSelector({
   options,
   selectedFont,
   onSelect,
+  open,
+  onToggle,
 }: FontSelectorProps) {
-  const [open, setOpen] = useState(false);
-
   return (
     <div className="relative inline-block text-left">
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={onToggle}
         className="
           px-4 py-2 border rounded
           bg-gray-100 text-gray-900 hover:bg-gray-200
@@ -39,10 +39,7 @@ export default function FontSelector({
           {options.map((opt) => (
             <li
               key={opt.value}
-              onClick={() => {
-                onSelect(opt);
-                setOpen(false);
-              }}
+              onClick={() => onSelect(opt)}
               className="
                 px-3 py-2 text-sm
                 hover:bg-gray-100 dark:hover:bg-gray-600

@@ -51,7 +51,9 @@ export default function Subjective({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="정답을 입력하세요"
-          className="flex-grow border p-2 rounded bg-white/75 focus:outline-none placeholder-[var(--placeholder-color)]"
+          className={`flex-grow border p-2 rounded focus:outline-none placeholder-[var(--placeholder-color)] ${
+            useOverlay ? "bg-white/75" : "bg-gray-500"
+          }`}
         />
         <button
           onClick={onSubmit}

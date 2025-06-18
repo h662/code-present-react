@@ -90,8 +90,12 @@ export default function MCQ({
                 }
                 ${
                   isSelected
-                    ? "bg-blue-100 border border-blue-500"
-                    : "hover:bg-gray-100"
+                    ? useOverlay
+                      ? "bg-blue-100 border border-blue-500"
+                      : "bg-blue-500 border border-blue-100"
+                    : useOverlay
+                    ? "hover:bg-gray-100"
+                    : "hover:bg-gray-500"
                 }
               `}
             >

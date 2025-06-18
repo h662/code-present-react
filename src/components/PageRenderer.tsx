@@ -71,11 +71,7 @@ export default function PageRenderer({
       );
     case "TABLE_ONLY":
       return (
-        <TableOnly
-          title={title!}
-          description={description!}
-          useOverlay={theme.useOverlay}
-        />
+        <TableOnly title={title!} description={description!} theme={theme} />
       );
     case "TABLE_IMAGE":
       return (
@@ -83,6 +79,7 @@ export default function PageRenderer({
           title={title!}
           description={description!}
           imageUrl={imageUrl!}
+          theme={theme}
         />
       );
     case "MCQ":

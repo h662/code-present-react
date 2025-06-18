@@ -1,4 +1,10 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getSlide } from "../api/slideService";
 import { toBlob } from "html-to-image";
@@ -21,6 +27,9 @@ export default function Slide() {
   const [selectedTheme, setSelectedTheme] = useState(themes[0]);
   const [fontOpen, setFontOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const increaseZoom = () => setZoom((z) => Math.min(z + 0.1, 2));
+  const decreaseZoom = () => setZoom((z) => Math.max(z - 0.1, 0.5));
 
   const { theme, toggleTheme } = useContext(ThemeContext);
 
@@ -83,9 +92,12 @@ export default function Slide() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-700 transition-colors">
+    <div
+      className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-700 transition-colors"
+      style={{ "--zoom": zoom } as CSSProperties}
+    >
       <div className="p-8 flex flex-col items-center space-y-4 w-full">
-        <div className="w-full max-w-4xl flex justify-end space-x-2">
+        <div className="w-full max-w-4xl flex justify-end space-x-2 mb-2">
           <button
             onClick={toggleTheme}
             className="btn-style"
@@ -99,6 +111,12 @@ export default function Slide() {
           </button>
           <button onClick={() => navigate(-1)} className="btn-style">
             <FaAnglesLeft />
+          </button>
+          <button onClick={decreaseZoom} className="btn-style">
+            –
+          </button>
+          <button onClick={increaseZoom} className="btn-style">
+            ＋
           </button>
           <button onClick={handleDownload} className="btn-style">
             <FaDownload />

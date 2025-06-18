@@ -21,7 +21,7 @@ function TextOnly({
         {title}
       </h2>
       <pre
-        className={`whitespace-pre-wrap mt-2 ${
+        className={`whitespace-pre-wrap text-base mt-2 ${
           useOverlay ? "text-overlay" : ""
         }`}
       >

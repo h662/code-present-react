@@ -10,7 +10,6 @@ interface Series {
 
 function Home() {
   const [series, setSeries] = useState<Series[]>([]);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,23 +18,43 @@ function Home() {
       .catch(console.error);
   }, []);
 
-  if (!series) return <p>Loading…</p>;
+  if (!series.length) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-700 transition-colors">
+        <p className="text-gray-900 dark:text-gray-100">Loading…</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl mb-4">Series</h1>
-      <ul className="space-y-2">
-        {series.map((s) => (
-          <li
-            key={s.id}
-            onClick={() => navigate(`/series/${s.id}`)}
-            className="border p-4 rounded font-semibold cursor-pointer"
-          >
-            {s.title}
-            <p className="text-sm text-gray-600">{s.description}</p>
-          </li>
-        ))}
-      </ul>
+    <div className="min-h-screen bg-white dark:bg-gray-700 dark:text-gray-100 transition-colors">
+      <div className="max-w-5xl mx-auto p-8">
+        <h1 className="text-2xl mb-4 text-gray-900 dark:text-white transition-colors">
+          Series
+        </h1>
+        <ul className="space-y-4">
+          {series.map((s) => (
+            <li
+              key={s.id}
+              onClick={() => navigate(`/series/${s.id}`)}
+              className="
+                btn-style
+                flex flex-col p-4 space-y-1 cursor-pointer
+                border border-gray-300 dark:border-gray-600
+                hover:bg-gray-100 dark:hover:bg-gray-600
+                transition-colors
+              "
+            >
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {s.title}
+              </span>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                {s.description}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

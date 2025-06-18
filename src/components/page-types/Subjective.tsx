@@ -8,6 +8,7 @@ interface SubjectiveProps {
   isDownloading: boolean;
   answer: string;
   theme: ThemeOption;
+  useOverlay: boolean;
 }
 
 export default function Subjective({
@@ -17,6 +18,7 @@ export default function Subjective({
   isDownloading,
   answer,
   theme,
+  useOverlay,
 }: SubjectiveProps) {
   const [input, setInput] = useState("");
   const [result, setResult] = useState<null | boolean>(null);
@@ -34,7 +36,13 @@ export default function Subjective({
 
   return (
     <div>
-      <h3 className="text-xl font-semibold mb-2 text-overlay">{title}</h3>
+      <h3
+        className={`text-xl font-semibold mb-2 ${
+          useOverlay ? "text-overlay" : ""
+        }`}
+      >
+        {title}
+      </h3>
       <p>{description}</p>
 
       <div className="mt-4 flex space-x-2">

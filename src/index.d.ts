@@ -23,6 +23,7 @@ interface ThemeOption {
   backgroundSize: string;
   backgroundRepeat: string;
   backgroundPosition: string;
+  useOverlay: boolean;
 }
 
 interface Font {

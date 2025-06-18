@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getSlide } from "../api/slideService";
 import { toBlob } from "html-to-image";
@@ -8,7 +8,8 @@ import SlideNav from "../components/SlideNav";
 import ThemeSelector from "../components/ThemeSelector";
 import { themes } from "../theme-data";
 import FontSelector from "../components/FontSelector";
-import { FaAnglesLeft, FaDownload } from "react-icons/fa6";
+import { FaAnglesLeft, FaDownload, FaMoon, FaSun } from "react-icons/fa6";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 const fonts = [
   { label: "프리텐다드", value: "Pretendard-Regular, sans-serif" },
@@ -28,6 +29,8 @@ export default function Slide() {
   const [selectedFont, setSelectedFont] = useState<Font>(fonts[0]);
   const [selectedTheme, setSelectedTheme] = useState(themes[0]);
 
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
   const navigate = useNavigate();
 
   const slideRef = useRef<HTMLDivElement>(null);
@@ -42,8 +45,6 @@ export default function Slide() {
       })
       .catch(console.error);
   }, [id]);
-
-  useEffect(() => console.log(pages), [pages]);
 
   if (!pages.length) return <p>Loading slide…</p>;
 
@@ -89,15 +90,23 @@ export default function Slide() {
   }
 
   return (
-    <div className="p-8 flex flex-col items-center space-y-4">
+    <div className="p-8 flex flex-col items-center space-y-4 bg-white dark:bg-gray-700">
       <div className="w-full max-w-4xl flex justify-end space-x-2">
         <button
-          onClick={() => navigate(-1)}
-          className="px-4 py-2 border rounded"
+          onClick={toggleTheme}
+          className="btn-style"
+          title={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
         >
+          {theme === "dark" ? (
+            <FaSun className="text-yellow-400" />
+          ) : (
+            <FaMoon />
+          )}
+        </button>
+        <button onClick={() => navigate(-1)} className="btn-style">
           <FaAnglesLeft />
         </button>
-        <button onClick={handleDownload} className="px-4 py-2 border rounded">
+        <button onClick={handleDownload} className="btn-style">
           <FaDownload />
         </button>
         <FontSelector

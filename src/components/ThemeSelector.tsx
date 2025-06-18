@@ -17,12 +17,25 @@ export default function ThemeSelector({
     <div className="relative inline-block text-left">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="px-4 py-2 border rounded bg-gray-100 hover:bg-gray-200"
+        className="
+          px-4 py-2 border rounded
+          bg-gray-100 text-gray-900 hover:bg-gray-200
+          dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-500
+          transition-colors
+        "
       >
         {selectedText} {open ? "▲" : "▼"}
       </button>
       {open && (
-        <ul className="absolute mt-2 w-48 bg-white border shadow-lg z-20">
+        <ul
+          className="
+            absolute mt-2 w-48
+            bg-white text-gray-900 border border-gray-300
+            dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600
+            shadow-lg z-20
+            transition-colors
+          "
+        >
           {options.map((opt) => (
             <li
               key={opt.label}
@@ -30,7 +43,11 @@ export default function ThemeSelector({
                 onSelect(opt);
                 setOpen(false);
               }}
-              className="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
+              className="
+                flex items-center px-3 py-2
+                hover:bg-gray-100 dark:hover:bg-gray-600
+                cursor-pointer transition-colors
+              "
             >
               <div
                 className="w-6 h-6 mr-2 rounded"
@@ -40,7 +57,18 @@ export default function ThemeSelector({
                   backgroundSize: "cover",
                 }}
               />
-              <span style={{ color: opt.textColor }}>{opt.label}</span>
+              <span
+                className={`
+                  ${
+                    opt.textColor === "#ffffff"
+                      ? "bg-gray-500 px-1 rounded"
+                      : ""
+                  }
+                `}
+                style={{ color: opt.textColor }}
+              >
+                {opt.label}
+              </span>
             </li>
           ))}
         </ul>

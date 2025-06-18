@@ -15,18 +15,10 @@ export default function SlideNav({
 }: SlideNavProps) {
   return (
     <div className="mt-4 space-x-4 flex flex-wrap items-center">
-      <button
-        disabled={disablePrev}
-        onClick={onPrev}
-        className="px-4 py-2 border rounded"
-      >
+      <button disabled={disablePrev} onClick={onPrev} className="btn-style">
         <FaAngleLeft />
       </button>
-      <button
-        disabled={disableNext}
-        onClick={onNext}
-        className="px-4 py-2 border rounded"
-      >
+      <button disabled={disableNext} onClick={onNext} className="btn-style">
         <FaAngleRight />
       </button>
     </div>

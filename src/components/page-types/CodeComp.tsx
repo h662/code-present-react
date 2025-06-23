@@ -26,13 +26,15 @@ function CodeComp({
         </button>
       )}
       {showCode && (
-        <SyntaxHighlighter
-          language="java"
-          style={oneDark}
-          customStyle={{ borderRadius: "0.5rem", padding: "1rem" }}
-        >
-          {code}
-        </SyntaxHighlighter>
+        <div className="max-w-[848px] text-base">
+          <SyntaxHighlighter
+            language="java"
+            style={oneDark}
+            customStyle={{ borderRadius: "0.5rem", padding: "1rem" }}
+          >
+            {code}
+          </SyntaxHighlighter>
+        </div>
       )}
     </div>
   );

@@ -93,15 +93,14 @@
 }
 
 @layer components {
-  .text-overlay {
-    @apply bg-white/75 px-3 py-1 rounded;
+  .btn-style {
+    @apply px-4 py-2 rounded transition-colors;
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
   }
 
-  .btn-style {
-    @apply px-4 py-2 border rounded flex items-center
-           bg-gray-100 text-gray-900 hover:bg-gray-200
-           dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-500
-           transition-colors duration-300 ease-in-out;
+  .btn-style:hover {
+    filter: brightness(0.9);
   }
 }
 

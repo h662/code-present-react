@@ -17,13 +17,18 @@ interface FontOption {
 
 interface ThemeOption {
   label: string;
-  textColor: string;
-  backgroundColor: string;
+  lightBg: string;
+  lightText: string;
+  darkBg: string;
+  darkText: string;
   backgroundImage: string;
   backgroundSize: string;
   backgroundRepeat: string;
   backgroundPosition: string;
-  useOverlay: boolean;
+  lightButtonBg: string;
+  lightButtonText: string;
+  darkButtonBg: string;
+  darkButtonText: string;
 }
 
 interface Font {

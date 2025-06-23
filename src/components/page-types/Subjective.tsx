@@ -8,7 +8,6 @@ interface SubjectiveProps {
   isDownloading: boolean;
   answer: string;
   theme: ThemeOption;
-  useOverlay: boolean;
 }
 
 export default function Subjective({
@@ -17,8 +16,6 @@ export default function Subjective({
   code,
   isDownloading,
   answer,
-  theme,
-  useOverlay,
 }: SubjectiveProps) {
   const [input, setInput] = useState("");
   const [result, setResult] = useState<null | boolean>(null);
@@ -36,14 +33,8 @@ export default function Subjective({
 
   return (
     <div>
-      <h3
-        className={`text-xl font-semibold mb-2 ${
-          useOverlay ? "text-overlay" : ""
-        }`}
-      >
-        {title}
-      </h3>
-      <p>{description}</p>
+      <h3 className={"text-xl font-semibold mb-2"}>{title}</h3>
+      <p className="text-base">{description}</p>
 
       <div className="mt-4 flex space-x-2">
         <input
@@ -51,18 +42,11 @@ export default function Subjective({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="정답을 입력하세요"
-          className={`flex-grow border p-2 rounded focus:outline-none placeholder-[var(--placeholder-color)] ${
-            useOverlay ? "bg-white/75" : "bg-gray-500"
-          }`}
+          className={
+            "flex-grow border p-2 rounded focus:outline-none placeholder-[var(--placeholder-color)] text-base"
+          }
         />
-        <button
-          onClick={onSubmit}
-          className="px-4 py-2 rounded"
-          style={{
-            backgroundColor: theme.textColor,
-            color: theme.backgroundColor,
-          }}
-        >
+        <button onClick={onSubmit} className="btn-style text-base">
           확인
         </button>
       </div>

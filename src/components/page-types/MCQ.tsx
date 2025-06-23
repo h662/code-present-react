@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import CodeComp from "./CodeComp";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 interface MCQProps {
   title: string;
@@ -8,7 +9,7 @@ interface MCQProps {
   isDownloading: boolean;
   options: string[];
   answer: string;
-  useOverlay: boolean;
+  theme: ThemeOption;
 }
 
 export default function MCQ({
@@ -18,7 +19,7 @@ export default function MCQ({
   options,
   answer,
   isDownloading,
-  useOverlay,
+  theme,
 }: MCQProps) {
   const correctIndices = answer
     .split(",")
@@ -29,6 +30,12 @@ export default function MCQ({
 
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
   const [result, setResult] = useState<boolean | null>(null);
+
+  const { theme: mode } = useContext(ThemeContext);
+  const isDark = mode === "dark";
+  const textColor = isDark ? theme.darkText : theme.lightText;
+  const btnBg = isDark ? theme.darkButtonBg : theme.lightButtonBg;
+  const btnText = isDark ? theme.darkButtonText : theme.lightButtonText;
 
   useEffect(() => {
     if (selectedIndices.length === 0) {
@@ -68,14 +75,8 @@ export default function MCQ({
 
   return (
     <div>
-      <h3
-        className={`text-xl font-semibold mb-2 ${
-          useOverlay ? "text-overlay" : ""
-        }`}
-      >
-        {title}
-      </h3>
-      <p>{description}</p>
+      <h3 className={"text-xl font-semibold mb-2"}>{title}</h3>
+      <p className="text-base">{description}</p>
 
       <ul className="mt-4 space-y-2">
         {options.map((opt, i) => {
@@ -84,20 +85,14 @@ export default function MCQ({
             <li
               key={i}
               onClick={() => onSelect(i)}
-              className={`
-                cursor-pointer flex items-center space-x-2 rounded p-2 ${
-                  useOverlay ? "text-overlay" : ""
-                }
-                ${
-                  isSelected
-                    ? useOverlay
-                      ? "bg-blue-100 border border-blue-500"
-                      : "bg-blue-500 border border-blue-100"
-                    : useOverlay
-                    ? "hover:bg-gray-100"
-                    : "hover:bg-gray-500"
-                }
-              `}
+              className="cursor-pointer flex items-center space-x-2 rounded p-2 transition-colors text-base"
+              style={{
+                backgroundColor: isSelected ? btnBg : "transparent",
+                color: isSelected ? btnText : textColor,
+                border: isSelected
+                  ? `1px solid ${btnBg}`
+                  : `1px solid transparent`,
+              }}
             >
               <span className="font-mono w-6 text-right">{i + 1}.</span>
               <span>{opt}</span>

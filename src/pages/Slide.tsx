@@ -33,6 +33,17 @@ export default function Slide() {
 
   const { theme, toggleTheme } = useContext(ThemeContext);
 
+  const wrapperBg =
+    theme === "dark" ? selectedTheme.darkBg : selectedTheme.lightBg;
+  const wrapperText =
+    theme === "dark" ? selectedTheme.darkText : selectedTheme.lightText;
+  const btnBg =
+    theme === "dark" ? selectedTheme.darkButtonBg : selectedTheme.lightButtonBg;
+  const btnText =
+    theme === "dark"
+      ? selectedTheme.darkButtonText
+      : selectedTheme.lightButtonText;
+
   const navigate = useNavigate();
 
   const slideRef = useRef<HTMLDivElement>(null);
@@ -93,8 +104,16 @@ export default function Slide() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-700 transition-colors"
-      style={{ "--zoom": zoom } as CSSProperties}
+      className="min-h-screen flex items-center justify-center transition-colors"
+      style={
+        {
+          backgroundColor: wrapperBg,
+          color: wrapperText,
+          "--btn-bg": btnBg,
+          "--btn-text": btnText,
+          "--zoom": zoom,
+        } as CSSProperties
+      }
     >
       <div className="p-8 flex flex-col items-center space-y-4 w-full">
         <div className="w-full max-w-4xl flex justify-end space-x-2 mb-2">
@@ -152,8 +171,8 @@ export default function Slide() {
         <SlideCanvas
           ref={slideRef}
           fontFamily={selectedFont.value}
-          textColor={selectedTheme.textColor}
-          backgroundColor={selectedTheme.backgroundColor}
+          textColor={wrapperText}
+          backgroundColor={wrapperBg}
           backgroundImage={selectedTheme.backgroundImage}
           backgroundSize={selectedTheme.backgroundSize}
           backgroundRepeat={selectedTheme.backgroundRepeat}

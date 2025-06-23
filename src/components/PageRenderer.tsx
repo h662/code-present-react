@@ -25,21 +25,9 @@ export default function PageRenderer({
 
   switch (pageType) {
     case "TITLE":
-      return (
-        <Title
-          title={title!}
-          description={description!}
-          useOverlay={theme.useOverlay}
-        />
-      );
+      return <Title title={title!} description={description!} />;
     case "TOC":
-      return (
-        <TOC
-          title={title!}
-          description={description!}
-          useOverlay={theme.useOverlay}
-        />
-      );
+      return <TOC title={title!} description={description!} />;
     case "TEXT_ONLY":
       return (
         <TextOnly
@@ -47,17 +35,10 @@ export default function PageRenderer({
           description={description!}
           code={code || null}
           isDownloading={isDownloading}
-          useOverlay={theme.useOverlay}
         />
       );
     case "CONCLUSION":
-      return (
-        <Conclusion
-          title={title!}
-          description={description!}
-          useOverlay={theme.useOverlay}
-        />
-      );
+      return <Conclusion title={title!} description={description!} />;
     case "IMAGE_ONLY":
       return <ImageOnly title={title!} imageUrl={imageUrl!} />;
     case "IMAGE_TEXT":
@@ -66,7 +47,6 @@ export default function PageRenderer({
           title={title!}
           description={description!}
           imageUrl={imageUrl!}
-          useOverlay={theme.useOverlay}
         />
       );
     case "TABLE_ONLY":
@@ -92,7 +72,7 @@ export default function PageRenderer({
           isDownloading={isDownloading}
           options={options!}
           answer={answer!}
-          useOverlay={theme.useOverlay}
+          theme={theme}
         />
       );
     case "SUBJECTIVE":
@@ -105,7 +85,6 @@ export default function PageRenderer({
           isDownloading={isDownloading}
           answer={answer!}
           theme={theme}
-          useOverlay={theme.useOverlay}
         />
       );
     default:
